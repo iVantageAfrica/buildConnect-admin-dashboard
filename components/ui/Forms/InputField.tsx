@@ -65,7 +65,7 @@ export function InputField({
     if (inputProps.disabled) {
       classes += ' opacity-60 cursor-not-allowed bg-gray-100';
     } else {
-      classes += ' bg-white hover:border-gray-400';
+      classes += ' hover:border-gray-400';
     }
 
     return classes;

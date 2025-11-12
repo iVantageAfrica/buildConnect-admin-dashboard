@@ -4,8 +4,15 @@ import { PasswordInput } from "@/components/ui/Forms/PasswordInput";
 import InputField from "@/components/ui/Forms/InputField";
 import { AmanwithBuildingPlan } from "@/libs/constants/image";
 import Button from "@/components/ui/Button/Button";
+import Link from "next/link";
+import { URLS } from "@/libs/constants/pageurl";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const router = useRouter();
+  const handlelogin = () =>{
+    router.push("dashboard")
+  }
   return (
     <Authlayout image={AmanwithBuildingPlan}>
       <div className="mb-8">
@@ -36,25 +43,25 @@ const Login = () => {
         />
       </div>
 
-      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 mb-6">
+      <Button onClick={handlelogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 mb-6">
         Login
       </Button>
 
       <div className="text-center mb-6">
         <p className="text-sm text-gray-600">
           Forgot Password?{" "}
-          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+          <Link href={URLS.AUTH.FORGOT_PASSWORD} className="text-blue-600 hover:text-blue-700 font-medium">
             Recover
-          </a>
+          </Link>
         </p>
       </div>
 
       <div className="text-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+          <Link href={URLS.AUTH.REGISTER} className="text-blue-600 hover:text-blue-700 font-medium">
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </Authlayout>

@@ -27,7 +27,7 @@ const ForgotPassword = () => {
 
 
       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 mb-6">
-        Login
+        Submit
       </Button>
 
       <div className="text-center mb-6">
