@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Activity from './Activity';
 import Projects from './Projects';
 import Documents from './Documents';
+import { UserDetailsProps } from '../UserDetails';
 
-const Otherdetails = () => {
+const Otherdetails = ({ id }: UserDetailsProps) => {
 
      const [activeTab, setActiveTab] = useState('activity');
     
@@ -39,13 +40,13 @@ const Otherdetails = () => {
 
       <div className="mt-6">
         {activeTab === 'activity' && (
-      <Activity/>
+      <Activity id={id}/>
         )}
         {activeTab === 'projects' && (
-         <Projects/>
+         <Projects id={id}/>
         )}
         {activeTab === 'documents' && (
-        <Documents/>
+        <Documents id={id}/>
         )}
       </div>
     </div>

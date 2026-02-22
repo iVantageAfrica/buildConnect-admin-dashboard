@@ -3,127 +3,128 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
 import { URLS } from '@/libs/constants/pageurl';
 import BackButton from '@/components/ui/BackButton';
 import InputField from '@/components/ui/Forms/InputField';
 import Dropdown from '@/components/ui/Forms/Dropdown';
 import Textarea from '@/components/ui/Forms/TextArea';
+import Button from '@/components/ui/Button/Button';
 
-// Zod Schema
-const scheduleMeetingSchema = z.object({
-  meetingTitle: z.string()
-    .min(3, 'Meeting title must be at least 3 characters')
-    .max(100, 'Meeting title is too long'),
-  
-  project: z.string()
-    .min(1, 'Please select a project'),
-  
-  milestone: z.string()
-    .min(1, 'Please select a milestone'),
-  
-  priority: z.enum(['low', 'medium', 'high'], {
-    errorMap: () => ({ message: 'Please select a priority level' })
-  }),
-  
-  attendees: z.string()
-    .min(1, 'Please select attendees'),
-  
-  date: z.string()
-    .min(1, 'Please select a date')
-    .refine((date) => new Date(date) >= new Date(), {
-      message: 'Date must be in the future'
-    }),
-  
-  time: z.string()
-    .min(1, 'Please select a time'),
-  
-  message: z.string()
-    .min(10, 'Message must be at least 10 characters')
-    .max(250, 'Message must not exceed 250 characters')
-});
+import { useProjects } from '@/libs/hooks/useProjects';
+import { ScheduleMeetingFormData, scheduleMeetingSchema } from '@/libs/schema/projectschema';
 
-type ScheduleMeetingFormData = z.infer<typeof scheduleMeetingSchema>;
+interface ScheduleMeetingProps {
+  id?: string;
+  organizerId?: string;
+  clientId?: string;
+}
 
-const ScheduleMeetings = () => {
+const ScheduleMeetings = ({ id, organizerId }: ScheduleMeetingProps) => {
+  const { getMilestoneQuery, createMeetings } = useProjects();
+  const {
+    data,
+    isLoading: isMilestonesLoading,
+    error,
+    refetch
+  } = getMilestoneQuery(id);
+console.log(organizerId)
+  const milestones = Array.isArray(data?.data?.data)
+    ? data?.data?.data.map((milestone: any) => ({
+        value: milestone.id,
+        label: milestone.name
+      }))
+    : [];
+
   const {
     control,
     handleSubmit,
     register,
-    setValue,
-    formState: { errors, isSubmitting }
+    formState: { errors, isValid },
+    reset
   } = useForm<ScheduleMeetingFormData>({
     resolver: zodResolver(scheduleMeetingSchema),
     defaultValues: {
-      meetingTitle: '',
-      project: '',
-      milestone: '',
-      priority: undefined,
-      attendees: '',
-      date: '',
-      time: '',
-      message: ''
-    }
+      title: '',
+      description: '',
+      scheduledAt: '',
+      durationMinutes: 60,
+      platform: 'zoom',
+      meetingType: 'progress_review',
+      meetingLink: '',
+      meetingId: '',
+      passcode: '',
+      physicalLocation: '',
+      attendeeEmails: '',
+      agenda: '',
+      milestoneId: ''
+    },
+    mode: "onChange"
   });
 
-  // Options data
-  const projects = [
-    { value: "premium-package", label: "Premium Package" },
-    { value: "starplus-package", label: "Starplus Package" },
-    { value: "basic-package", label: "Basic Package" },
+  const platforms = [
+    { value: 'zoom', label: 'Zoom' },
+    { value: 'google_meet', label: 'Google Meet' },
+    { value: 'microsoft_teams', label: 'Microsoft Teams' },
+    { value: 'in_person', label: 'In Person' },
   ];
 
-  const milestones = [
-    { value: "foundation-work", label: "Foundation Work" },
-    { value: "structural-work", label: "Structural Work" },
-    { value: "finishing-work", label: "Finishing Work" },
+  const meetingTypes = [
+    { value: 'project_kickoff', label: 'Project Kickoff' },
+    { value: 'milestone_review', label: 'Milestone Review' },
+    { value: 'progress_update', label: 'Progress Update' },
+    { value: 'issue_resolution', label: 'Issue resolution' },
+    { value: 'project_completion', label: 'Project Completion' },
+    { value: 'general', label: 'general' },
   ];
 
-  const priorities = [
-    { value: "low", label: "Low" },
-    { value: "medium", label: "Medium" },
-    { value: "high", label: "High" },
+  const durationOptions = [
+    { value: 15, label: '15 minutes' },
+    { value: 30, label: '30 minutes' },
+    { value: 45, label: '45 minutes' },
+    { value: 60, label: '1 hour' },
+    { value: 90, label: '1.5 hours' },
+    { value: 120, label: '2 hours' },
+    { value: 180, label: '3 hours' },
+    { value: 240, label: '4 hours' },
   ];
 
-  const attendees = [
-    { value: "project-manager", label: "Project Manager" },
-    { value: "contractor", label: "Contractor" },
-    { value: "client", label: "Client" },
-    { value: "engineer", label: "Engineer" },
-  ];
+  const onSubmit = async (formData: ScheduleMeetingFormData) => {
+    const apiData = {
+      title: formData.title,
+      description: formData.description,
+      organizerId: organizerId || '',
+      milestoneId: formData.milestoneId,
+      scheduledAt: formData.scheduledAt,
+      durationMinutes: formData.durationMinutes,
+      platform: formData.platform,
+      meetingType: formData.meetingType,
+      meetingLink: formData.meetingLink || '',
+      meetingId: formData.meetingId || '',
+      passcode: formData.passcode || '',
+      physicalLocation: formData.physicalLocation || '',
+      attendeeEmails: formData.attendeeEmails.split(',').map(email => email.trim()),
+      agenda: formData.agenda
+    };
 
-  // Generate time slots
-  const timeSlots = Array.from({ length: 24 }, (_, i) => {
-    const hour = i.toString().padStart(2, '0');
-    return { value: `${hour}:00`, label: `${hour}:00` };
-  });
+    createMeetings.mutate({
+      projectId: id,
+    meetingData: apiData
+    });
+  }; // Fixed: Added closing brace for onSubmit function
 
-  const onSubmit = async (data: ScheduleMeetingFormData) => {
-    try {
-      console.log('Form Data:', data);
-      
-      // TODO: Replace with your API call
-      // const response = await fetch('/api/meetings', {
-      //   method: 'POST',
-      //   body: JSON.stringify(data),
-      // });
-      
-      alert('Meeting scheduled successfully!');
-      
-      // Reset form or redirect
-      // router.push('/dashboard/meetings');
-      
-    } catch (error) {
-      console.error('Error scheduling meeting:', error);
-      alert('Failed to schedule meeting. Please try again.');
-    }
+  const handleCancel = () => {
+    window.history.back();
+  };
+
+  const handleReset = () => {
+    reset();
   };
 
   return (
     <DashboardLayout urlpath={URLS.DASHBOARD.MEETING}>
       <BackButton label="Back" />
-      
+
       <div className="">
         <h1 className="text-2xl font-bold text-gray-900">Schedule Meeting</h1>
         <p className="text-md text-gray-600 mt-2 mb-6">
@@ -132,177 +133,256 @@ const ScheduleMeetings = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="border border-gray-300 rounded-lg p-6 bg-white shadow-sm">
-            
             {/* Meeting Title */}
             <div className="mb-6">
               <InputField
                 label="Meeting Title"
-                id="meetingTitle"
-                placeholder="e.g., Site visit"
-                error={errors.meetingTitle?.message}
-                {...register("meetingTitle")}
+                id="title"
+                placeholder="e.g., Progress Review Meeting"
+                error={errors.title?.message}
+                required
+                {...register("title")}
               />
             </div>
 
-            {/* Grid Layout for Dropdowns */}
+            {/* Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              
-              {/* Project */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Project <span className="text-red-500">*</span>
-                </label>
-                <Controller
-                  name="project"
-                  control={control}
-                  render={({ field }) => (
-                    <Dropdown
-                      width="w-full"
-                      label=""
-                      id="project"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      options={projects}
-                      error={errors.project?.message}
-                    />
-                  )}
-                />
-              </div>
-
-              {/* Milestone */}
+              {/* Milestone Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Milestone <span className="text-red-500">*</span>
                 </label>
                 <Controller
-                  name="milestone"
+                  name="milestoneId"
                   control={control}
                   render={({ field }) => (
                     <Dropdown
                       width="w-full"
                       label=""
-                      id="milestone"
+                      id="milestoneId"
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       options={milestones}
-                      error={errors.milestone?.message}
+                      error={errors.milestoneId?.message}
+                      isLoading={isMilestonesLoading}
+                      disabled={isMilestonesLoading}
+                      placeholder={isMilestonesLoading ? "Loading milestones..." : "Select a milestone"}
+                      required
                     />
                   )}
                 />
+                {error && (
+                  <p className="mt-1 text-sm text-red-500">Error loading milestones. Please try again.</p>
+                )}
               </div>
 
-    
+              {/* Date and Time */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Priority <span className="text-red-500">*</span>
-                </label>
-                <Controller
-                  name="priority"
-                  control={control}
-                  render={({ field }) => (
-                    <Dropdown
-                      width="w-full"
-                      label=""
-                      id="priority"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      options={priorities}
-                      error={errors.priority?.message}
-                    />
-                  )}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Attendees <span className="text-red-500">*</span>
-                </label>
-                <Controller
-                  name="attendees"
-                  control={control}
-                  render={({ field }) => (
-                    <Dropdown
-                      width="w-full"
-                      label=""
-                      id="attendees"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      options={attendees}
-                      error={errors.attendees?.message}
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date <span className="text-red-500">*</span>
+                  Date & Time <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="date"
-                  id="date"
-                  {...register("date")}
+                  type="datetime-local"
+                  id="scheduledAt"
+                  {...register("scheduledAt")}
                   className={`
                     w-full px-4 py-3 rounded-lg border
-                    ${errors.date 
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    ${errors.scheduledAt
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
                     }
                     focus:outline-none focus:ring-2 focus:ring-opacity-50
                   `}
+                  required
                 />
-                {errors.date && (
-                  <p className="mt-1 text-sm text-red-500">{errors.date.message}</p>
+                {errors.scheduledAt && (
+                  <p className="mt-1 text-sm text-red-500">{errors.scheduledAt.message}</p>
                 )}
               </div>
+
+              {/* Duration */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Time <span className="text-red-500">*</span>
+                  Duration <span className="text-red-500">*</span>
                 </label>
                 <Controller
-                  name="time"
+                  name="durationMinutes"
                   control={control}
                   render={({ field }) => (
                     <Dropdown
                       width="w-full"
                       label=""
-                      id="time"
+                      id="durationMinutes"
+                      value={field.value?.toString()}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      options={durationOptions}
+                      error={errors.durationMinutes?.message}
+                      required
+                    />
+                  )}
+                />
+              </div>
+
+              {/* Platform */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Platform <span className="text-red-500">*</span>
+                </label>
+                <Controller
+                  name="platform"
+                  control={control}
+                  render={({ field }) => (
+                    <Dropdown
+                      width="w-full"
+                      label=""
+                      id="platform"
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
-                      options={timeSlots}
-                      error={errors.time?.message}
+                      options={platforms}
+                      error={errors.platform?.message}
+                      required
+                    />
+                  )}
+                />
+              </div>
+
+              {/* Meeting Type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meeting Type <span className="text-red-500">*</span>
+                </label>
+                <Controller
+                  name="meetingType"
+                  control={control}
+                  render={({ field }) => (
+                    <Dropdown
+                      width="w-full"
+                      label=""
+                      id="meetingType"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      options={meetingTypes}
+                      error={errors.meetingType?.message}
+                      required
                     />
                   )}
                 />
               </div>
             </div>
 
+            {/* Meeting Description */}
             <div className="mb-6">
               <Textarea
-                name="message"
+                name="description"
                 control={control}
                 label="Meeting Description"
-                placeholder="Enter meeting agenda and details..."
-                maxLength={250}
+                placeholder="Brief description of the meeting purpose..."
+                maxLength={500}
                 showCharCount={true}
                 required
-                helperText="Provide details about the meeting purpose and agenda"
+                helperText="Provide a brief overview of the meeting"
               />
             </div>
+
+            {/* Conditional Fields based on Platform */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <Controller
+                name="platform"
+                control={control}
+                render={({ field: { value: platform } }) => (
+                  <>
+                    {platform !== 'in_person' && (
+                      <>
+                        <div>
+                          <InputField
+                            label="Meeting Link"
+                            id="meetingLink"
+                            placeholder="https://zoom.us/j/..."
+                            error={errors.meetingLink?.message}
+                            {...register("meetingLink")}
+                          />
+                        </div>
+                        <div>
+                          <InputField
+                            label="Meeting ID"
+                            id="meetingId"
+                            placeholder="123 456 7890"
+                            error={errors.meetingId?.message}
+                            {...register("meetingId")}
+                          />
+                        </div>
+                        <div>
+                          <InputField
+                            label="Passcode (Optional)"
+                            id="passcode"
+                            placeholder="Enter passcode"
+                            error={errors.passcode?.message}
+                            {...register("passcode")}
+                          />
+                        </div>
+                      </>
+                    )}
+                    {platform === 'in_person' && (
+                      <div className="md:col-span-2">
+                        <InputField
+                          label="Physical Location"
+                          id="physicalLocation"
+                          placeholder="e.g., 123 Main St, City, State"
+                          error={errors.physicalLocation?.message}
+                          {...register("physicalLocation")}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            {/* Attendee Emails */}
+            <div className="mb-6">
+              <InputField
+                label="Attendee Emails"
+                id="attendeeEmails"
+                placeholder="Enter emails separated by commas (e.g., john@example.com, jane@example.com)"
+                error={errors.attendeeEmails?.message}
+                helperText="Separate multiple emails with commas"
+                required
+                {...register("attendeeEmails")}
+              />
+            </div>
+
+            {/* Agenda */}
+            <div className="mb-6">
+              <Textarea
+                name="agenda"
+                control={control}
+                label="Meeting Agenda"
+                placeholder="Detailed agenda items, discussion points..."
+                maxLength={1000}
+                showCharCount={true}
+                required
+                rows={4}
+                helperText="Outline the meeting topics and discussion points"
+              />
+            </div>
+
             <div className="flex items-center justify-end gap-4 pt-4 border-t">
-              <button
+              <Button
                 type="button"
-                onClick={() => window.history.back()}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                variant="outline"
+                onClick={handleCancel}
+                className="border-gray-300 hover:bg-gray-50"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={isSubmitting}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                loading={createMeetings.isPending}
+                disabled={!isValid || createMeetings.isPending}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
               >
-                {isSubmitting ? 'Scheduling...' : 'Schedule Meeting'}
-              </button>
+                Schedule Meeting
+              </Button>
             </div>
           </div>
         </form>

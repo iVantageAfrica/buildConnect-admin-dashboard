@@ -3,40 +3,36 @@ import DashboardLayout from '../DashboardLayout/DashboardLayout';
 import Clients from './Clients';
 import { URLS } from '@/libs/constants/pageurl';
 import Builders from './Builders';
-import Addclient from './Addclient/Addclient';
-import Button from '@/components/ui/Button/Button';
 
+// ✅ Move static data OUTSIDE the component so it's never recreated on re-render
+const TABS = [
+  { id: 'clients', label: 'Clients' },
+  { id: 'builders', label: 'Builders' },
+];
 
 export default function Users() {
   const [activeTab, setActiveTab] = useState('clients');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const tabs = [
-    { id: 'clients', label: 'Clients' },
-    { id: 'builders', label: 'Builders' }
-  ];
 
   return (
     <DashboardLayout urlpath={URLS.DASHBOARD.USERS}>
       <div className="p-4">
         <div>
-          <p className="text-2xl font-bold ">User Management</p>
-             <p className="text-sm py-4">Manage Builders and client on the platform</p>
+          <p className="text-2xl font-bold">User Management</p>
+          <p className="text-sm py-4">Manage Builders and clients on the platform</p>
         </div>
+
         <div className="flex items-center justify-between mb-6">
           <div className="border-b border-gray-200 flex-1">
             <nav className="flex space-x-8">
-              {tabs.map((tab) => (
+              {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    pb-4 px-1 text-sm font-medium transition-colors relative
-                    ${activeTab === tab.id
+                  className={`pb-4 px-1 text-sm font-medium transition-colors relative ${
+                    activeTab === tab.id
                       ? 'text-blue-600'
                       : 'text-gray-500 hover:text-gray-700'
-                    }
-                  `}
+                  }`}
                 >
                   {tab.label}
                   {activeTab === tab.id && (
@@ -46,29 +42,22 @@ export default function Users() {
               ))}
             </nav>
           </div>
-          
-         
-         
-        </div>
-        <div className="flex justify-end">
-           <Button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-300 mb-2 text-white"
-          >
-            Add Client
-          </Button>
         </div>
 
         <div className="mt-6">
-          {activeTab === 'clients' && <Clients />}
-          {activeTab === 'builders' && <Builders />}
+          {/*
+            ✅ Use CSS visibility instead of conditional rendering.
+            Both components stay mounted, so pagination/filter state
+            is preserved when switching tabs. No unmount = no reset.
+          */}
+          <div className={activeTab === 'clients' ? 'block' : 'hidden'}>
+            <Clients />
+          </div>
+          <div className={activeTab === 'builders' ? 'block' : 'hidden'}>
+            <Builders />
+          </div>
         </div>
       </div>
-
-      <Addclient 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-      />
     </DashboardLayout>
   );
 }

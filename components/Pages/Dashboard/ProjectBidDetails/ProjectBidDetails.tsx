@@ -6,8 +6,11 @@ import { ProgressBar } from '@/components/ui/Custom/ProgressBar';
 import { Building2, Calendar, DollarSign, User } from 'lucide-react';
 import Button from '@/components/ui/Button/Button';
 import { InfoGrid, InfoItem } from '@/components/ui/Custom/Infogrid';
+import { useProjects } from '@/libs/hooks/useProjects';
 
 const ProjectBidDetails = () => {
+
+  
        const projectInfo: InfoItem[] = [
         {
           icon: User,

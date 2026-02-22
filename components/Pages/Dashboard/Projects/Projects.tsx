@@ -7,8 +7,10 @@ import ProjectTable from "./Table";
 import ProjectMetrics from "./ProjectMetrics";
 import { PlusIcon } from "lucide-react";
 import ActionButton from "@/components/ui/Button/ActionButton";
+import { useProjects } from "@/libs/hooks/useProjects";
 
 const Projects = () => {
+  
   return (
     <DashboardLayout urlpath={URLS.DASHBOARD.PROJECTS}>
       <div className="flex justify-between">
@@ -20,19 +22,17 @@ const Projects = () => {
         </div>
 
         <div className="">
-        <ActionButton
+        {/* <ActionButton
           label="Add Project"
           icon={<PlusIcon />}
           href="/create-project"
-        />
+        /> */}
         </div>
       </div>
           <div className="pt-4">
             <CalendarHeader/>
         </div>
-        <div>
-      <ProjectMetrics/>
-        </div>
+      
         
         <div>
           <ProjectTable/>

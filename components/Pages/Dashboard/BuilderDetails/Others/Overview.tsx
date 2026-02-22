@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
+import { UserDetailsProps } from "../../UserDetails/UserDetails";
 
-export default function Overview() {
+export default function Overview({ id }: UserDetailsProps) {
   const builderData = {
     companyName: "ABC Construction",
     phoneNumber: "+234 907 155 9651",

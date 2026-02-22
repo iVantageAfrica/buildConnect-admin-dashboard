@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import Activity from './Overview';
-import Projects from './Bids';
-import Documentation from './Documentation';
+import Documentation from './Documents';
+import { UserDetailsProps } from '../../UserDetails/UserDetails';
+import SubmittedBids from './Bids';
+import Activity from './Activity';
+import Documents from './Documents';
 
-const Otherdetails = () => {
+const Otherdetails = ({ id }: UserDetailsProps) => {
 
-     const [activeTab, setActiveTab] = useState('overview');
+     const [activeTab, setActiveTab] = useState('activity');
     
       const tabs = [
-        { id: 'overview', label: 'Overview' },
+         { id: 'activity', label: 'Activity' },
         { id: 'bids', label: 'Bids' },
-        { id: 'documentation', label: 'Documentation' }
+        { id: 'documents', label: 'Documentation' }
       ];
   return (
       <div className="p-6">
@@ -38,14 +40,14 @@ const Otherdetails = () => {
       </div>
 
       <div className="mt-6">
-        {activeTab === 'overview' && (
-      <Activity/>
+        {activeTab === 'activity' && (
+      <Activity id={id}/>
         )}
         {activeTab === 'bids' && (
-         <Projects/>
+         <SubmittedBids id={id}/>
         )}
-        {activeTab === 'documentation' && (
-        <Documentation/>
+        {activeTab === 'documents' && (
+      <Documents id={id}/>
         )}
       </div>
     </div>

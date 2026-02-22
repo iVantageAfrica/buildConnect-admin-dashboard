@@ -6,7 +6,7 @@ const page = () => {
    const params = useParams()
     const { id } = params
   return (
-<UserDetails/>
+<UserDetails id={id}/>
   )
 }
 

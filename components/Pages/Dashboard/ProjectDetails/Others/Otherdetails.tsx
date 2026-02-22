@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import Activity from './Overview';
+import Overview from './Overview';
 import Projects from './Media';
 import Documentation from './Documentation';
 import Milestones from './Milestone';
 import Media from './Media';
 import Meeting from './Meeting';
 
-const Otherdetails = () => {
+const Otherdetails = ({project}:any) => {
 
      const [activeTab, setActiveTab] = useState('overview');
     
@@ -14,10 +14,9 @@ const Otherdetails = () => {
         { id: 'overview', label: 'Overview' },
         { id: 'milestones', label: 'Milestones' },
               { id: 'documentation', label: 'Documentation' },
-        { id: 'media', label: 'Media' },
             { id: 'meetings', label: 'Meetings' },
       ];
-  return (
+       return (
       <div className="p-6">
       <div className="border-b border-gray-200">
         <nav className="flex space-x-8">
@@ -44,19 +43,19 @@ const Otherdetails = () => {
 
       <div className="mt-6">
         {activeTab === 'overview' && (
-      <Activity/>
+      <Overview project={project}/>
         )}
         {activeTab === 'milestones' && (
-    <Milestones/>
+    <Milestones project={project}/>
         )}
         {activeTab === 'documentation' && (
-        <Documentation/>
+        <Documentation project={project}/>
         )}
-          {activeTab === 'media' && (
+          {/* {activeTab === 'media' && (
          <Media/>
-        )}
+        )} */}
            {activeTab === 'meetings' && (
-         <Meeting/>
+         <Meeting project={project}/>
         )}
       </div>
     </div>

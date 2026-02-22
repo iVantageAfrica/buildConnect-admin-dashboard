@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { BuildConnectLogo } from "@/libs/constants/image";
 import { URLS } from "@/libs/constants/pageurl";
+import { useRouter } from "next/navigation";
 
 interface MenuItem {
   id: string;
@@ -105,20 +106,20 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       href: URLS.DASHBOARD.BID,
       active: activePath === URLS.DASHBOARD.BID
     },
-    { 
-      id: 'properties', 
-      label: 'Properties', 
-      icon: Building2, 
-      href: URLS.DASHBOARD.PROPERTIES,
-      active: activePath === URLS.DASHBOARD.PROPERTIES
-    },
-    { 
-      id: 'transactions', 
-      label: 'Transactions', 
-      icon: CreditCard, 
-      href: URLS.DASHBOARD.TRANSACTIONS,
-      active: activePath === URLS.DASHBOARD.TRANSACTIONS
-    },
+    // { 
+    //   id: 'properties', 
+    //   label: 'Properties', 
+    //   icon: Building2, 
+    //   href: URLS.DASHBOARD.PROPERTIES,
+    //   active: activePath === URLS.DASHBOARD.PROPERTIES
+    // },
+    // { 
+    //   id: 'transactions', 
+    //   label: 'Transactions', 
+    //   icon: CreditCard, 
+    //   href: URLS.DASHBOARD.TRANSACTIONS,
+    //   active: activePath === URLS.DASHBOARD.TRANSACTIONS
+    // },
     { 
       id: 'documents', 
       label: 'Documents', 
@@ -130,8 +131,8 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       id: 'meetings', 
       label: 'Meetings', 
       icon: Calendar, 
-      href: URLS.DASHBOARD.MEETINGS || '/dashboard/meetings',
-      active: activePath === (URLS.DASHBOARD.MEETINGS || '/dashboard/meetings')
+      href: URLS.DASHBOARD.MEETINGS || '/meetings',
+      active: activePath === (URLS.DASHBOARD.MEETINGS || '/meetings')
     },
     { 
       id: 'support', 
@@ -155,9 +156,9 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       [itemId]: !prev[itemId]
     }));
   };
-
+   const router = useRouter();
   const handleLogout = () => {
-    clearAuthData();
+   router.push('/')
   };
 
   return (

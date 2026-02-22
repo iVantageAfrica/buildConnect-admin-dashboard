@@ -14,17 +14,17 @@ const Authlayout: React.FC<AuthLayoutProps> = ({ children, image }) => {
         <div className="mb-4 pl-45">
           <Image src={BuildConnectLogo} alt="BuildConnect logo" className="" />
         </div>
-        <div className="flex flex-col justify-center bg-white mt-20 py-12 sm:px-12 xl:pl-55">
+        <div className="flex flex-col justify-center bg-white mt-18 py-12 sm:px-12 xl:pl-55">
           <div className="max-w-md w-full">{children}</div>
         </div>
       </div>
 
-      <div className="relative my-4">
+      <div className="relative my-9 mx-4">
         <Image
           src={image}
           alt="Construction worker with building plan"
           fill
-          className="w-[560px]"
+          className=""
           priority
         />
       </div>

@@ -13,7 +13,7 @@ export default function SubmittedBids() {
   };
 
    const allProjects = [
-    { id: 1, project: "ABC Construction", builder: "Mike Chan", bidamount: "800", documents: "1 files", submittteddate: "23/2025",  status:"pending"},
+    { id: 1, project: "ABC Construction", builder: "Mike Chan", bidamount: "800", documents: "1 files", submitteddate: "23/2025",  status:"pending"},
     { id: 2, project: "Express Builders ", builder: "Lola rae", bidamount: "900", documents: "2 files", submitteddate: "27/2026", status:"pending"},
   ];
 

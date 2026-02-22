@@ -5,8 +5,8 @@ interface MetricItem {
   icon: React.ElementType;
   label: string;
   value: string | number;
-  change?: number;            // optional
-  isPositive?: boolean;       // optional (only used if change exists)
+  change?: number;
+  isPositive?: boolean;
 }
 
 interface MetricsCardProps {
@@ -14,10 +14,23 @@ interface MetricsCardProps {
 }
 
 export default function MetricsCard({ metrics }: MetricsCardProps) {
+  const count = metrics.length;
+
+  // Pick a grid-cols class that matches the number of metrics at large screens,
+  // then collapse gracefully on smaller viewports.
+  const gridCols =
+    count === 2
+      ? "grid-cols-1 sm:grid-cols-2"
+      : count === 3
+      ? "grid-cols-1 sm:grid-cols-3"
+      : count === 4
+      ? "grid-cols-2 lg:grid-cols-4"     // 2×2 on tablet, 4-wide on desktop
+      : "grid-cols-2 lg:grid-cols-3";    // fallback for 5+
+
   return (
-    <div className="p-8">
+    <div className="  py-8 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-stretch border-t border-b border-gray-200">
+        <div className={`grid ${gridCols} border-t border-l border-gray-200`}>
           {metrics.map((metric, index) => {
             const Icon = metric.icon;
             const TrendIcon =
@@ -30,9 +43,7 @@ export default function MetricsCard({ metrics }: MetricsCardProps) {
             return (
               <div
                 key={index}
-                className={`flex-1 py-8 px-6 ${
-                  index !== metrics.length - 1 ? "border-r border-gray-200" : ""
-                }`}
+                className="py-8 px-6 border-b border-r border-gray-200"
               >
                 <div className="flex items-center gap-3 mb-6">
                   <Icon className="w-5 h-5 text-gray-700" />

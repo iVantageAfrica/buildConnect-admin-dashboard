@@ -5,60 +5,111 @@ import { ProgressBar } from "@/components/ui/Custom/ProgressBar";
 import Otherdetails from "./Others/Otherdetails";
 import BackButton from "@/components/ui/BackButton";
 import { InfoGrid, InfoItem } from "@/components/ui/Custom/Infogrid";
+import { useProjects } from "@/libs/hooks/useProjects";
+import { UserDetailsProps } from "../UserDetails/UserDetails";
 
-const ProjectDetails = () => {
-    const projectInfo: InfoItem[] = [
+const ProjectDetails = ({ id }: UserDetailsProps) => {
+  const { singleProjectQuery } = useProjects();
+  const { data, isLoading, error } = singleProjectQuery(id);
+  const project = data?.data?.data;
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <DashboardLayout urlpath={URLS.DASHBOARD.PROJECTS}>
+        <div className="bg-gray-50 min-h-screen">
+          <div className="p-4">
+            <BackButton label="Back" />
+            <div className="mt-4 p-4 flex justify-center items-center h-64">
+              <div className="text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+                <p className="mt-4 text-gray-600">Loading project details...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <DashboardLayout urlpath={URLS.DASHBOARD.PROJECTS}>
+        <div className="bg-gray-50 min-h-screen">
+          <div className="p-4">
+            <BackButton label="Back" />
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-600">Error loading project details. Please try again.</p>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Show not found state
+  if (!project) {
+    return (
+      <DashboardLayout urlpath={URLS.DASHBOARD.PROJECTS}>
+        <div className="bg-gray-50 min-h-screen">
+          <div className="p-4">
+            <BackButton label="Back" />
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-yellow-600">Project not found.</p>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Now we can safely use project data
+  const projectInfo: InfoItem[] = [
     {
       icon: User,
       label: 'Client',
-      value: 'Mrs Tracy C.'
+      value: project?.client?.name ?? "Not specified"
     },
     {
       icon: Building2,
       label: 'Builder',
-      value: 'Mike Chen'
+      value: project?.builder?.name ?? "Abc Constructions"
     },
     {
       icon: DollarSign,
       label: 'Budget',
-      value: '₦15,000,000'
+      value: project?.budgetAmount ? `$${project.budgetAmount}` : "0"
     },
-    {
-      icon: Calendar,
-      label: 'Timeline',
-      value: 'Feb 13, 2025 - Jan 30, 2026'
-    }
   ];
+
   return (
     <DashboardLayout urlpath={URLS.DASHBOARD.PROJECTS}>
-      <div className=" bg-gray-50 ">
-        <div className="">
-        <BackButton label="Back" />
-          <div className="  p-4">
-            <div className="flex  justify-between mb-6">
+      <div className="bg-gray-50 min-h-screen">
+        <div className="p-4">
+          <BackButton label="Back" />
+          <div className="p-4">
+            <div className="flex justify-between mb-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-2xl font-bold text-gray-900">
-                    Sunrise Shopping Plaza
+                    {project?.title}
                   </h1>
                   <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-md">
-                    Completed
+                    {project?.status}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500">
-                  Project ID: daf52109-a0bd-4db8-9c26-afa04cd79207
-                </p>
               </div>
 
               <div className="text-right">
-                <ProgressBar progress={100} label="Foundation" />
+                <ProgressBar progress={project?.progress ?? 0} label="Foundation" />
               </div>
             </div>
 
-          <InfoGrid items={projectInfo} />
+            <InfoGrid items={projectInfo} />
           </div>
-          <Otherdetails/>
-        .</div>
+          <Otherdetails project={project}  />
+        </div>
       </div>
     </DashboardLayout>
   );
