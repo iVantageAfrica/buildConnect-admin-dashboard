@@ -100,40 +100,7 @@ export default function RecentActivity() {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h1>
         
-        <div className="flex gap-3 mb-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.name}
-              onClick={() => setActiveTab(tab.name)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                activeTab === tab.name
-                  ? tab.name === 'Review'
-                    ? 'bg-blue-100 text-blue-700'
-                    : tab.name === 'Pending'
-                    ? 'bg-red-100 text-red-700'
-                    : tab.name === 'Completed'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-700'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {tab.name}
-              <span className={`ml-2 px-2 py-0.5 rounded text-xs ${
-                activeTab === tab.name
-                  ? tab.name === 'Review'
-                    ? 'bg-blue-200 text-blue-800'
-                    : tab.name === 'Pending'
-                    ? 'bg-red-200 text-red-800'
-                    : tab.name === 'Completed'
-                    ? 'bg-green-200 text-green-800'
-                    : 'bg-gray-200 text-gray-800'
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
-                {tab.count}
-              </span>
-            </button>
-          ))}
-        </div>
+       
 
         <DataTable 
           columns={columns}

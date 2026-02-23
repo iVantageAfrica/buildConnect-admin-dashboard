@@ -18,11 +18,27 @@ const expressionOfInterestMutation = ( params: object) => {
   });
 };
 
+const bidInvitationQuery = ( params: object) => {
+  return useQuery({
+    queryKey: ['bidInvitationQuery',  params], 
+    queryFn: () => BidService.bidInvitations(params),
+  });
+};
+
+const submittedQuery = ( params: object) => {
+  return useQuery({
+    queryKey: ['ubmittedQuery',  params], 
+    queryFn: () => BidService.submittedBids(params),
+  });
+};
+
 
   
 
   return { 
   expressionOfInterestMutation,
+  bidInvitationQuery,
+  submittedQuery
   
    };
 };

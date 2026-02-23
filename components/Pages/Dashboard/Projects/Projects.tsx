@@ -16,23 +16,12 @@ const Projects = () => {
       <div className="flex justify-between">
         <div>
           <p className="text-2xl font-bold ">Project Management</p>
-          <p className="text-sm py-4">
+          <p className="text-sm py-2">
             Oversee construction projects and milestone tracking
           </p>
         </div>
-
-        <div className="">
-        {/* <ActionButton
-          label="Add Project"
-          icon={<PlusIcon />}
-          href="/create-project"
-        /> */}
-        </div>
       </div>
-          <div className="pt-4">
-            <CalendarHeader/>
-        </div>
-      
+        
         
         <div>
           <ProjectTable/>

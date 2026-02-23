@@ -9,7 +9,7 @@ const Index = () => {
   return (
     <DashboardLayout urlpath={URLS.DASHBOARD.DASHBOARD}>
   <div>
-   <CalendarHeader/>
+
    <MetricsDashboard/>
    <RecentActivity/>
     </div>

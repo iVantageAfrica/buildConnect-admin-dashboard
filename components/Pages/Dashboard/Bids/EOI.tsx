@@ -65,7 +65,7 @@ export default function EOI() {
   const { expressionOfInterestMutation } = useBid();
   const { data, isLoading, error } = expressionOfInterestMutation({ page, limit });
 
-  // API shape: { data: [...], meta: { totalDocuments, totalPage, page, count } }
+ 
   const rawData = data?.data?.data || [];
   console.log(rawData);
   const totalCount: number = data?.data?.data?.meta?.totalDocuments ?? 0;
@@ -124,8 +124,7 @@ export default function EOI() {
           searchPlaceholder="Search expressions of interest..."
           searchableColumns={["project", "builder", "status"]}
           showSerialNumber={true}
-          isLoading={isLoading}
-          // ── Server-side pagination ───────────────────────────────────────
+          isLoading={isLoading}      
           serverSide={true}
           totalCount={totalCount}
           currentPage={page}

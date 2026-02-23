@@ -21,6 +21,13 @@ export const APIURLS = {
     PREPARE_UPLOAD: "admin/files/prepare",
     CONFIRM_UPLOAD: (fileId: string) => `admin/files/${fileId}/confirm`,
   },
+   SUPPORT: {
+    SUPPORT: '/admin/support',
+  },
+    INDEX: {
+    DASHBOARDANALYTICS: '/admin/analytics/',
+    RECENTACTIVITY: '/admin/support',
+  },
     },
  
 } as const;

@@ -1,99 +1,155 @@
 import MetricsCard from "@/components/ui/Custom/MetricsCard";
 import { DataTable } from "@/components/ui/Datatable";
-import { AlertCircle, AlertTriangle, Building2, Eye } from "lucide-react";
+import { useBid } from "@/libs/hooks/useBid";
+import { AlertCircle, AlertTriangle, Building2, Eye, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
 
+const COLUMNS = [
+  {
+    key: "project",
+    header: "Project",
+    render: (row: any) => <span>{row.project}</span>,
+  },
+  {
+    key: "builder",
+    header: "Builder",
+    render: (row: any) => (
+      <div className="flex flex-col">
+        <span className="font-medium">{row.builderName}</span>
+        <span className="text-xs text-gray-400">{row.builderEmail}</span>
+      </div>
+    ),
+  },
+  {
+    key: "bidAmount",
+    header: "Bid Amount",
+    render: (row: any) => (
+      <span className="font-medium">
+        {row.bidAmount !== null && row.bidAmount !== undefined
+          ? `$${Number(row.bidAmount).toLocaleString()}`
+          : "N/A"}
+      </span>
+    ),
+  },
+  {
+    key: "proposedTimeline",
+    header: "Proposed Timeline",
+    render: (row: any) => <span>{row.proposedTimeline || "N/A"}</span>,
+  },
+  {
+    key: "submittedDate",
+    header: "Submitted Date",
+    render: (row: any) => (
+      <span>
+        {row.submittedDate
+          ? new Date(row.submittedDate).toLocaleDateString()
+          : "N/A"}
+      </span>
+    ),
+  },
+  {
+    key: "status",
+    header: "Status",
+    render: (row: any) => (
+      <span
+        className={`px-3 py-1 rounded-md text-sm font-medium ${
+          row.status === "accepted"
+            ? "bg-green-100 text-green-700"
+            : row.status === "rejected"
+            ? "bg-red-100 text-red-700"
+            : "bg-yellow-100 text-yellow-700" // pending
+        }`}
+      >
+        {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+      </span>
+    ),
+  },
+];
+
+const METRICS = [
+  { icon: Building2,     label: "Total Bids",     value: "20", isPositive: true },
+  { icon: AlertCircle,   label: "Pending Review", value: "9",  isPositive: false },
+  { icon: AlertTriangle, label: "Approved",        value: "8",  isPositive: true },
+  { icon: XCircle,       label: "Rejected",        value: "8",  isPositive: false },
+];
 
 export default function SubmittedBids() {
   const router = useRouter();
+  const [page, setPage]   = useState(1);
+  const [limit, setLimit] = useState(8);
 
-  const handleClick = (row: any) => {
-    const id = row.id;
-    router.push(`/milestone-details/${id}`);
-  };
+  const { submittedQuery } = useBid();
+  const { data, isLoading, error } = submittedQuery({ page, limit });
 
-   const allProjects = [
-    { id: 1, project: "ABC Construction", builder: "Mike Chan", bidamount: "800", documents: "1 files", submitteddate: "23/2025",  status:"pending"},
-    { id: 2, project: "Express Builders ", builder: "Lola rae", bidamount: "900", documents: "2 files", submitteddate: "27/2026", status:"pending"},
-  ];
+  // API shape: { data: [...], meta: { totalDocuments } }
+  const rawData    = data?.data?.data  || [];
+  const totalCount: number = data?.data?.meta?.totalDocuments ?? 0;
 
-  const columns = [
-    { key: "project", header: "Projects", render: row  => <span>{row.project}</span> },
-    { key: "builder", header: "Builder", render: row => <span>{row.builder}</span> },
-  { key: "bidamount", header: "Bid Amount", render: row => <span>{row.bidamount}</span> },
-    { key: "documents", header: "Documents", render: row => <span>{row.documents}</span> },
-        { key: "submitteddate", header: "Submittted Date", render: row => <span>{row.submitteddate}</span> },
-    {
-      key: "status", header: "Status", render: row => (
-        <span className={`px-3 py-1 rounded-md text-sm font-medium ${
-          row.status === "Active" ? "bg-green-100 text-green-700"
-          : row.status === "Bidding" ? "bg-blue-100 text-blue-700"
-          : "bg-yellow-100 text-yellow-700"
-        }`}>
-          {row.status}
-        </span>
-      )
-    },
+  const tableData = useMemo(
+    () =>
+      rawData.map((item: any) => ({
+        id:               item.id,
+        project:          item.project?.title   || "N/A",
+        builderName:      item.builder?.name    || "N/A",
+        builderEmail:     item.builder?.email   || "",
+        bidAmount:        item.bidAmount,
+        proposedTimeline: item.proposedTimeline,
+        submittedDate:    item.submittedAt,
+        status:           item.status,
+      })),
+    [rawData],
+  );
 
-  ];
+  const actions = useMemo(
+    () => [
+      {
+        label: "View",
+        icon: <Eye className="w-4 h-4 text-gray-600" />,
+        onClick: (row: any) => router.push(`/milestone-details/${row.id}`),
+      },
+    ],
+    [router],
+  );
 
-  const actions = [
-    {
-      label: "View",
-      icon: <Eye className="w-4 h-4 text-gray-600" />,
-      onClick: (row: any) => handleClick(row)
-    },
-  ];
-
-   const metrics = [
-    {
-      icon: Building2,
-      label: 'Total Bids',
-      value: '20',
-      isPositive: true
-    },
-    {
-      icon: AlertCircle,
-      label: 'Pending Review',
-      value: '9',
-  
-      isPositive: false
-    },
-    {
-      icon: AlertTriangle,
-      label: 'Approved',
-      value: '8',
-  
-      isPositive: true
-    },
-     {
-      icon: AlertTriangle,
-      label: 'Rejected',
-      value: '8',
-  
-      isPositive: true
-    }
-  ];
+  if (error) {
+    return (
+      <div className="text-red-500 text-center p-4">
+        Error loading submitted bids: {(error as Error).message}
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gray-50 ">
-        <div>
-            <p className="text-2xl font-bold">
-            Submitted Bids
-            </p>
-            <p className="text-md">Review and manage all submitted project bids</p>
-        </div>
-        <MetricsCard metrics={metrics} />
+    <div className="bg-gray-50">
+      <div>
+        <p className="text-2xl font-bold">Submitted Bids</p>
+        <p className="text-md">Review and manage all submitted project bids</p>
+      </div>
+
+      <MetricsCard metrics={METRICS} />
+
       <div className="max-w-7xl mx-auto">
         <DataTable
-          columns={columns}
-          data={allProjects}
+          columns={COLUMNS}
+          data={tableData}
           actions={actions}
           rowsPerPageOptions={[5, 8, 10, 20]}
-          defaultRowsPerPage={8}
-         searchPlaceholder="...search"
-         searchableColumns={[]}
+          defaultRowsPerPage={limit}
+          showSearch={true}
+          searchPlaceholder="Search submitted bids..."
+          searchableColumns={["project", "builderName", "status"]}
           showSerialNumber={true}
+          isLoading={isLoading}
+          // ── Server-side pagination ──────────────────────────────────────
+          serverSide={true}
+          totalCount={totalCount}
+          currentPage={page}
+          onPageChange={(newPage) => setPage(newPage)}
+          onRowsPerPageChange={(newLimit) => {
+            setLimit(newLimit);
+            setPage(1);
+          }}
         />
       </div>
     </div>

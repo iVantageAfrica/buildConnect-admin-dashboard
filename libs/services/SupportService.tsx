@@ -20,13 +20,12 @@ interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export const BidService = {
+export const SupportService = {
 
-  expressionInterest: (id: any,): Promise<User> => 
-    axiosInstance.get(`${APIURLS.DASHBOARD.BIDS}/expressions-of-interest`),
-    bidInvitations: (id: any,): Promise<User> => 
-    axiosInstance.get(`${APIURLS.DASHBOARD.BIDS}/invitations`),
-    submittedBids: (id: any,): Promise<User> => 
-    axiosInstance.get(`${APIURLS.DASHBOARD.BIDS}/submitted`),
+    getTickets: (id: any,): Promise<User> => 
+    axiosInstance.get(`${APIURLS.DASHBOARD.SUPPORT.SUPPORT}/tickets`),
+    createTickets: (data: any,): Promise<User> => 
+    axiosInstance.get(`${APIURLS.DASHBOARD.SUPPORT.SUPPORT}/tickets`, data),
+    // submittedBids: (id: any,): Promise<User> => 
+    // axiosInstance.get(`${APIURLS.DASHBOARD.BIDS}/submitted`),
 };
-

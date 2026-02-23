@@ -87,7 +87,7 @@ if (loginData.statusCode === 200) {
   }
 });
  const refreshTokenMutation = useMutation({
-  mutationFn: AuthService.resetpassword,
+  mutationFn: AuthService.refreshtoken,
   onSuccess: (data: any) => {
       const refreshToken = data?.data;
    if (refreshToken?.statusCode === 200) {
