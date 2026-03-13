@@ -23,7 +23,7 @@ interface PaginatedResponse<T> {
 export const MeetingService = {
 
  getMeetings: (params: any): Promise<User> => 
-    axiosInstance.get(`${APIURLS.DASHBOARD.MEETINGS}`, {params}),
+    axiosInstance.get(`${APIURLS.DASHBOARD.MEETINGS}/`, {params}),
    createMeeting: (data: { projectId: string; meetingData: any }): Promise<any> => 
   axiosInstance.post(
     `${APIURLS.DASHBOARD.PROJECTS}/meetings/${data.projectId}/meetings`,
