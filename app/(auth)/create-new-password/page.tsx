@@ -1,11 +1,10 @@
-"use client"
+import { Suspense } from "react";
 import CreateNewPassword from '@/components/Pages/Auth/CreateNewPassword/CreateNewPassword'
-import React from 'react'
 
-const page = () => {
+export default function Page() {
   return (
-   <CreateNewPassword/>
-  )
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateNewPassword />
+    </Suspense>
+  );
 }
-
-export default page

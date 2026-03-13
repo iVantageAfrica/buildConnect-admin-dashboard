@@ -1,3 +1,4 @@
+"use client"
 import { OTPInput, OTPInputRef } from '@/components/ui/Forms/InputOtp';
 import React, { useRef, useState } from 'react';
 import Authlayout from '../Authlayout';

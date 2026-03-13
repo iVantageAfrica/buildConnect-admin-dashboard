@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import Authlayout from '../Authlayout'
 import { TwoPeopleWithBuildingPlan } from '@/libs/constants/image'
