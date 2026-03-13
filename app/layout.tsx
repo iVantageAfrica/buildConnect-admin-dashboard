@@ -3,37 +3,36 @@ import { Urbanist } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/libs/providers";
 
-
 const urbanist = Urbanist({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dnwhouse.com"),
+  metadataBase: new URL("https://buildconnect.com"),
   title: {
-    default: "Dnwhouse - Domain Research & Keyword Analysis Tool",
-    template: "%s | Dnwhouse",
+    default: "BuildConnect - Connect Clients with Trusted Builders",
+    template: "%s | BuildConnect",
   },
   description:
-    "Discover powerful domain insights and keyword research tools. Search across 350M+ domains for your next big idea. Affordable domain research for investors and SEO professionals.",
+    "BuildConnect helps you find verified builders and contractors for your construction projects. Post your project, receive bids, and hire the best builder — all in one place.",
   keywords: [
-    "domain research",
-    "keyword research",
-    "keyword analysis",
-    "domain finder",
-    "SEO tool",
-    "related keywords",
-    "domain metrics",
-    "backlink analysis",
-    "domain value",
-    "keyword planner",
-    "domain investor tools",
-    "expired domains",
+    "find builders",
+    "hire contractors",
+    "construction projects",
+    "building contractors",
+    "project bids",
+    "verified builders",
+    "construction platform",
+    "home renovation",
+    "contractor marketplace",
+    "building professionals",
+    "construction management",
+    "client contractor connect",
   ],
-  authors: [{ name: "Dnwhouse" }],
-  creator: "Dnwhouse",
-  publisher: "Dnwhouse",
+  authors: [{ name: "BuildConnect" }],
+  creator: "BuildConnect",
+  publisher: "BuildConnect",
   robots: {
     index: true,
     follow: true,
@@ -46,29 +45,29 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'f7e1503caf31ecdd', // Your Google verification code
+    google: 'f7e1503caf31ecdd',
   },
   openGraph: {
-    title: "Dnwhouse - Domain Research & Keyword Analysis Tool",
+    title: "BuildConnect - Connect Clients with Trusted Builders",
     description:
-      "Search across 350M+ domains to find the perfect name for your next project. Powerful keyword research and domain insights.",
-    url: "https://dnwhouse.com",
-    siteName: "Dnwhouse",
+      "Post your construction project and receive bids from verified builders. Find the right contractor for any job — fast, easy, and reliable.",
+    url: "https://buildconnect.com",
+    siteName: "BuildConnect",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dnwhouse - Domain Research & Keyword Tool",
+    title: "BuildConnect - Find Trusted Builders for Your Project",
     description:
-      "Search 350M+ domains. Powerful keyword research and domain analysis for investors and SEO professionals.",
-    creator: "@DomainSwif96103",
-    site: "@DomainSwif96103",
+      "Post a project, get bids, hire verified builders. BuildConnect makes construction hiring simple for clients and professionals.",
+    creator: "@BuildConnect",
+    site: "@BuildConnect",
   },
   alternates: {
-    canonical: "https://dnwhouse.com",
+    canonical: "https://buildconnect.com",
   },
-  category: "SEO Tools",
+  category: "Construction & Real Estate",
 };
 
 export default function RootLayout({
@@ -76,34 +75,35 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Dnwhouse",
-    "description": "Domain research and keyword analysis tool with access to 350M+ domains. Perfect for domain investors and SEO professionals.",
-    "url": "https://dnwhouse.com",
+    "name": "BuildConnect",
+    "description":
+      "A marketplace platform that connects clients with verified builders and contractors. Post projects, receive competitive bids, and manage construction from start to finish.",
+    "url": "https://buildconnect.com",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web Browser",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
     },
     "featureList": [
-      "Domain keyword research",
-      "350M+ domain database",
-      "Related keyword discovery",
-      "Domain metrics analysis",
-      "Fast search results"
-    ]
+      "Post construction projects",
+      "Receive bids from verified builders",
+      "Builder profile and portfolio review",
+      "Milestone-based payment tracking",
+      "Client and contractor messaging",
+      "Project progress management",
+    ],
   };
 
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#016FB9" />
+        <meta name="theme-color" content="#2463EB" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
