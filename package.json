@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run type-check && next build --turbopack",
+   "build": "DISABLE_ESLINT_PLUGIN=true npm run type-check && next build --turbopack",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -32,8 +32,5 @@
     "eslint-config-next": "15.5.4",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "scripts": {
-  "build": "DISABLE_ESLINT_PLUGIN=true next build"
-}
+  }
 }
