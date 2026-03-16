@@ -21,13 +21,13 @@ export function PropertyCard({
         <img
           src={image}
           alt={title}
-          className="w-full h-64 object-cover"
+          className="w-full h-55 object-cover"
         />
       </div>
 
       <div className="p-6">
         <div className="flex items-start justify-between mb-2">
-          <h2 className="text-xl font-bold text-gray-900 flex-1">
+          <h2 className="text-md font-bold text-gray-900 flex-1">
             {title}
           </h2>
           {status && (

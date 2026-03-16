@@ -14,7 +14,7 @@ const DashboardLayout: React.FC<DashboardProps> = ({ children, urlpath }) => {
       <Sidebar activePath={urlpath} />
       <div className="flex-1 overflow-auto">
         <Header />
-        <main className="p-6 pl-10">
+        <main className="p-6 pl-3">
           {children}
         </main>
       </div>

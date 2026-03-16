@@ -11,12 +11,15 @@ export const APIURLS = {
       CHANGEPASSWORD: '/auth/reset-password',
       REFRESHTOKEN: '/auth/reset-token'
     },
-     DASHBOARD: {
+    DASHBOARD: {
     USERS: '/admin/users',
     PROJECTS: '/admin/projects',
     BIDS: '/admin/bids',
     DOCUMENTS: '/admin/documents',
     MEETINGS: '/admin/meetings',
+    ESCROW: '/admin/escrows',
+    PROPERTY: '/admin/properties',
+    MORTGAGE: '/admin/mortgage-applications',
     UPLOAD: {
     PREPARE_UPLOAD: "admin/files/prepare",
     CONFIRM_UPLOAD: (fileId: string) => `admin/files/${fileId}/confirm`,

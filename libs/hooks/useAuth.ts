@@ -24,7 +24,7 @@ if (loginData.statusCode === 200) {
   const { authToken, refreshToken, user } = loginData.data;
   setAuthData(authToken, refreshToken, user);
   toast.success("Success", "Login Successful");
-   router.push("/dashboard");
+    router.push("/dashboard");
 }
 
   },

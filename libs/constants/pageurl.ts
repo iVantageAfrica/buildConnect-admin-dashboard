@@ -17,5 +17,7 @@ export const URLS = {
       MEETING: '/meetings',
       SUPPORT: '/support',
       SETTINGS: '/settings',
+      ESCROW: '/escrow',
+      MORTGAGE: '/mortgage',
     }
 } as const;

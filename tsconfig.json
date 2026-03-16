@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Pages/Dashboard/PropertyListings/PropertyListing.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Pages/Dashboard/PropertyListings/PropertyListing.tsx", "libs/utils/axios.tss"],
   "exclude": ["node_modules"]
 }

@@ -84,24 +84,22 @@ axiosInstance.interceptors.response.use(
           { refreshToken }
         );
 
-        const newAccessToken: string = data.accessToken;
-        const newRefreshToken: string = data.refreshToken;
+        const newAccessToken: string = data?.data.authToken;
+        const newRefreshToken: string = data?.data?.refreshToken;
 
-        // ── Persist the new tokens ──
         const encryptedAccess = await encryptData(newAccessToken);
         const encryptedRefresh = await encryptData(newRefreshToken);
         sessionStorage.setItem("authToken", encryptedAccess);
         sessionStorage.setItem("refreshToken", encryptedRefresh);
 
-        // ── Update your auth store if needed ──
-        // useAuthStore.getState().setToken(newAccessToken);
+      
 
         processQueue(null, newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh failed → log the user out
+     
         processQueue(refreshError, null);
 
         const { clearAuthData } = useAuthStore.getState();
@@ -116,7 +114,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // Handle 500 errors separately (don't retry, just log out)
     if (error.response?.status === 500) {
       const { clearAuthData } = useAuthStore.getState();
       clearAuthData();

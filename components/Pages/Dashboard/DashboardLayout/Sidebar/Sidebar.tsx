@@ -106,20 +106,27 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       href: URLS.DASHBOARD.BID,
       active: activePath === URLS.DASHBOARD.BID
     },
-    // { 
-    //   id: 'properties', 
-    //   label: 'Properties', 
-    //   icon: Building2, 
-    //   href: URLS.DASHBOARD.PROPERTIES,
-    //   active: activePath === URLS.DASHBOARD.PROPERTIES
-    // },
-    // { 
-    //   id: 'transactions', 
-    //   label: 'Transactions', 
-    //   icon: CreditCard, 
-    //   href: URLS.DASHBOARD.TRANSACTIONS,
-    //   active: activePath === URLS.DASHBOARD.TRANSACTIONS
-    // },
+    { 
+      id: 'properties', 
+      label: 'Properties', 
+      icon: Building2, 
+      href: URLS.DASHBOARD.PROPERTIES,
+      active: activePath === URLS.DASHBOARD.PROPERTIES
+    },
+    { 
+      id: 'escrow', 
+      label: 'Escrow', 
+      icon: CreditCard, 
+      href: URLS.DASHBOARD.ESCROW,
+      active: activePath === URLS.DASHBOARD.ESCROW
+    },
+     { 
+      id: 'mortgage', 
+      label: 'Mortgage', 
+      icon: CreditCard, 
+      href: URLS.DASHBOARD.MORTGAGE,
+      active: activePath === URLS.DASHBOARD.MORTGAGE
+    },
     { 
       id: 'documents', 
       label: 'Documents', 
@@ -177,7 +184,7 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       <div
         id="sidebar"
         className={`
-          fixed md:relative z-40 w-64 bg-white h-screen border-r b border-gray-200 flex flex-col
+          fixed md:relative z-40 w-64 bg-white  h-screen border-r b border-gray-200 flex flex-col
           transform transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
