@@ -20,6 +20,7 @@ export const APIURLS = {
     ESCROW: '/admin/escrows',
     PROPERTY: '/admin/properties',
     MORTGAGE: '/admin/mortgage-applications',
+    DELETE_REQUESTS: '/admin/account-deletion/requests',
     UPLOAD: {
     PREPARE_UPLOAD: "admin/files/prepare",
     CONFIRM_UPLOAD: (fileId: string) => `admin/files/${fileId}/confirm`,

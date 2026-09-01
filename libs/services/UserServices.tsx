@@ -37,5 +37,9 @@ createClients: (id: any): Promise<User> =>
     axiosInstance.get(`${APIURLS.DASHBOARD.USERS}/clients`),
 createBuilders: (id: any): Promise<User> => 
     axiosInstance.get(`${APIURLS.DASHBOARD.USERS}/builders`),
+getAllAccountDeletions: ( params: any): Promise<User> => 
+    axiosInstance.get(`${APIURLS.DASHBOARD.DELETE_REQUESTS}`, {params}),
+deleteAccount: (id: any, data: any): Promise<User> => 
+    axiosInstance.patch(`${APIURLS.DASHBOARD.DELETE_REQUESTS}/${id}/resolve`, data),
 };
 

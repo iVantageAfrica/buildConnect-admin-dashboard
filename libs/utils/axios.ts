@@ -114,11 +114,11 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 500) {
-      const { clearAuthData } = useAuthStore.getState();
-      clearAuthData();
-      window.location.href = "/";
-    }
+    // if (error.response?.status === 500) {
+    //   const { clearAuthData } = useAuthStore.getState();
+    //   clearAuthData();
+    //   window.location.href = "/";
+    // }
 
     return Promise.reject(error);
   }

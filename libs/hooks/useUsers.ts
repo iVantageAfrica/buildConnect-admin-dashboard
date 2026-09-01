@@ -98,6 +98,26 @@ const documentsQuery = (id :string, params: object) => {
     }
   });
 
+   const getAllAccountDeletionQuery = (params: object) => {
+  return useQuery({
+    queryKey: ['getAllAccountDeltionquery',  params], 
+    queryFn: () => UserService.getAllAccountDeletions( params),
+  });
+};
+ const requestAccountDeletion = useMutation({
+  mutationFn: ({ id, data }: { id: string; data: any }) =>
+    UserService.deleteAccount(id, data),
+  onSuccess: (data) => {
+    toast.success("Success", "Account deletion requested successfully");
+    //   onClose();
+    //   methods.reset();
+    //   onSuccess?.();
+  },
+  onError: (error: any) => {
+    handleApiError(error, "An error occured", toast);
+  },
+});
+
   return { 
     userQuery,
     singleUserQuery,
@@ -107,6 +127,8 @@ const documentsQuery = (id :string, params: object) => {
     singleBuilderQuery,
     createClientMutation,
     createBuildersMutation,
-    bidQuery
+    bidQuery,
+    getAllAccountDeletionQuery,
+    requestAccountDeletion
    };
 };

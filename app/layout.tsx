@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { Providers } from "@/libs/providers";
 
 const urbanist = Urbanist({
@@ -104,10 +104,6 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#2463EB" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
       </head>
       <body className={`${urbanist.className} antialiased`}>
         <Providers>{children}</Providers>
